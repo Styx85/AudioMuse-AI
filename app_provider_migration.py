@@ -734,7 +734,7 @@ def session_start():
             properties:
               target_type:
                 type: string
-                enum: [jellyfin, emby, navidrome, lyrion, plex]
+                enum: [jellyfin, emby, navidrome, lyrion, plex, musicassistant]
               target_creds:
                 type: object
                 additionalProperties: true
@@ -1110,7 +1110,7 @@ def probe_test():
             properties:
               type:
                 type: string
-                enum: [jellyfin, emby, navidrome, lyrion, plex]
+                enum: [jellyfin, emby, navidrome, lyrion, plex, musicassistant]
               creds:
                 type: object
                 additionalProperties: true
