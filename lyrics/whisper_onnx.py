@@ -55,15 +55,13 @@ WHISPER_COMPRESSION_RATIO_THRESHOLD = float(
 
 
 def _resolve_whisper_threads() -> int:
-    raw = os.environ.get('LYRICS_WHISPER_INTRA_OP_THREADS', '').strip()
-    if raw == '':
-        cpu_count = usable_cpu_count() or os.cpu_count() or 1
-        return max(1, cpu_count // 3)
-    try:
-        return max(0, int(raw))
-    except ValueError:
-        cpu_count = usable_cpu_count() or os.cpu_count() or 1
-        return max(1, cpu_count // 3)
+    import config
+
+    configured = config.LYRICS_WHISPER_INTRA_OP_THREADS
+    if configured >= 0:
+        return configured
+    cpu_count = usable_cpu_count() or os.cpu_count() or 1
+    return max(1, cpu_count // 3)
 
 
 WHISPER_INTRA_OP_THREADS = _resolve_whisper_threads()

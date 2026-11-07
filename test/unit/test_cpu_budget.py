@@ -382,20 +382,32 @@ def test_get_lyrics_threads_matches_host_when_unrestricted(monkeypatch):
 
 
 def test_whisper_resolve_threads_uses_the_container_count(monkeypatch):
+    import config
     from lyrics import whisper_onnx
 
-    monkeypatch.delenv('LYRICS_WHISPER_INTRA_OP_THREADS', raising=False)
+    monkeypatch.setattr(config, 'LYRICS_WHISPER_INTRA_OP_THREADS', -1)
     monkeypatch.setattr(whisper_onnx, 'usable_cpu_count', lambda: 2)
     assert whisper_onnx._resolve_whisper_threads() == 1
 
 
 def test_whisper_resolve_threads_matches_host_when_unrestricted(monkeypatch):
+    import config
     from lyrics import whisper_onnx
 
-    monkeypatch.delenv('LYRICS_WHISPER_INTRA_OP_THREADS', raising=False)
+    monkeypatch.setattr(config, 'LYRICS_WHISPER_INTRA_OP_THREADS', -1)
     monkeypatch.setattr(whisper_onnx, 'usable_cpu_count', lambda: None)
     monkeypatch.setattr(os, 'cpu_count', lambda: 16)
     assert whisper_onnx._resolve_whisper_threads() == 5
+
+
+@pytest.mark.parametrize('configured', [0, 1, 4])
+def test_whisper_resolve_threads_honours_the_configured_value(monkeypatch, configured):
+    import config
+    from lyrics import whisper_onnx
+
+    monkeypatch.setattr(config, 'LYRICS_WHISPER_INTRA_OP_THREADS', configured)
+    monkeypatch.setattr(whisper_onnx, 'usable_cpu_count', lambda: 12)
+    assert whisper_onnx._resolve_whisper_threads() == configured
 
 
 def test_ivf_manager_max_worker_threads_uses_the_container_count(monkeypatch):
