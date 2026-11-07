@@ -1044,8 +1044,13 @@ LYRICS_MUSICNN_SKIP = os.environ.get("LYRICS_MUSICNN_SKIP", "true").lower() == "
 MUSICSERVER_LYRICS_TIMEOUT = float(os.environ.get("MUSICSERVER_LYRICS_TIMEOUT", "2.5"))
 # User-configurable lyrics API slots (up to 2).
 # Each slot stores: url_template, lyrics_field, artist_param, title_param, api_key_param, api_key_value
-# e.g. LYRICS_API_1_URL_TEMPLATE = "https://example.com/api/get?{artist_param}={artist}&{title_param}={title}"
-LYRICS_API_1_URL_TEMPLATE  = os.environ.get("LYRICS_API_1_URL_TEMPLATE",  "")
+# The URL is either a base URL (artist/title are appended as <artist_param>=...&<title_param>=...)
+# or a template with {artist} and {title} placeholders, e.g. "https://example.com/{artist}/{title}".
+# Slot 1 defaults to LRCLIB (the free lyrics database Music Assistant also uses), so lyrics
+# are fetched instead of transcribed with Whisper for most known songs. Set it to "" to disable.
+LYRICS_API_1_URL_TEMPLATE  = os.environ.get(
+    "LYRICS_API_1_URL_TEMPLATE", "https://lrclib.net/api/get"
+)
 LYRICS_API_1_ARTIST_PARAM  = os.environ.get("LYRICS_API_1_ARTIST_PARAM",  "artist_name")
 LYRICS_API_1_TITLE_PARAM   = os.environ.get("LYRICS_API_1_TITLE_PARAM",   "track_name")
 LYRICS_API_1_LYRICS_FIELD  = os.environ.get("LYRICS_API_1_LYRICS_FIELD",  "plainLyrics")
