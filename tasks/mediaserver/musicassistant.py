@@ -45,7 +45,6 @@ MA_PLAYLIST_BATCH_SIZE = 100
 MA_TASK_TIMEOUT = 120
 MA_TASK_POLL_SECONDS = 0.5
 _TASK_DONE = {'success'}
-# partial_success: MA could not add some of the tracks, so the playlist is incomplete
 _TASK_FAILED = {'failed', 'cancelled', 'canceled', 'partial_success'}
 FILESYSTEM_DOMAIN_PREFIX = 'filesystem_'
 LIBRARY = 'library'
@@ -55,23 +54,19 @@ class MusicAssistantError(Exception):
     """Raised for unusable Music Assistant responses."""
 
 
-# --------------------------------------------------------------------------- #
-# Connection helpers
-# --------------------------------------------------------------------------- #
-
 def _creds(user_creds=None):
     return context.active_creds(user_creds) or {}
 
 
 def _base_url(user_creds=None):
     creds = _creds(user_creds)
-    url = creds.get('url') or getattr(config, 'MUSICASSISTANT_URL', '')
+    url = creds.get('url') or config.MUSICASSISTANT_URL
     return (url or '').rstrip('/')
 
 
 def _headers(user_creds=None):
     creds = _creds(user_creds)
-    token = creds.get('token') or getattr(config, 'MUSICASSISTANT_TOKEN', '')
+    token = creds.get('token') or config.MUSICASSISTANT_TOKEN
     headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
     if token:
         headers['Authorization'] = f'Bearer {token}'
@@ -80,7 +75,7 @@ def _headers(user_creds=None):
 
 def _music_path_setting(user_creds=None):
     creds = _creds(user_creds)
-    return creds.get('music_path') or getattr(config, 'MUSICASSISTANT_MUSIC_PATH', '') or ''
+    return creds.get('music_path') or config.MUSICASSISTANT_MUSIC_PATH or ''
 
 
 def _music_roots(user_creds=None):
@@ -130,16 +125,12 @@ def _paged(command, args, user_creds=None, page_size=None, max_items=None):
         offset += len(page)
 
 
-# --------------------------------------------------------------------------- #
-# Normalization
-# --------------------------------------------------------------------------- #
-
 def _name(obj):
     return obj.get('name') if isinstance(obj, dict) else None
 
 
 def _filesystem_mapping(track, providers=None):
-    """The filesystem provider mapping of a track (preferring the filtered providers)."""
+    """The track's available filesystem mapping; with ``providers`` only one of those counts."""
     mappings = [
         m for m in (track.get('provider_mappings') or [])
         if isinstance(m, dict)
@@ -147,7 +138,6 @@ def _filesystem_mapping(track, providers=None):
         and m.get('available', True)
     ]
     if providers is not None:
-        # strict: a track only counts for the libraries (providers) that were selected
         mappings = [m for m in mappings if m.get('provider_instance') in providers]
     return mappings[0] if mappings else None
 
@@ -210,10 +200,6 @@ def _is_local(track, providers=None):
     return track.get('provider') == LIBRARY and _filesystem_mapping(track, providers) is not None
 
 
-# --------------------------------------------------------------------------- #
-# Libraries (= Music Assistant filesystem provider instances)
-# --------------------------------------------------------------------------- #
-
 def _filesystem_providers(user_creds=None):
     providers = _call('providers', {}, user_creds)
     if not isinstance(providers, list):
@@ -242,7 +228,7 @@ def _target_providers(user_creds=None, force_filter=False):
     ids = [p['id'] for p in providers]
     if not force_filter and user_creds and context.active_server() is None:
         return ids
-    names_str = context.active_libraries(getattr(config, 'MUSIC_LIBRARIES', ''))
+    names_str = context.active_libraries(config.MUSIC_LIBRARIES)
     if not names_str or not names_str.strip():
         return ids
     wanted = {n.strip().lower() for n in names_str.split(',') if n.strip()}
@@ -257,10 +243,6 @@ def _target_providers(user_creds=None, force_filter=False):
         )
     return matched
 
-
-# --------------------------------------------------------------------------- #
-# Catalogue
-# --------------------------------------------------------------------------- #
 
 def get_recent_albums(limit):
     try:
@@ -448,10 +430,6 @@ def test_connection(user_creds=None):
         return result
 
 
-# --------------------------------------------------------------------------- #
-# Playlists
-# --------------------------------------------------------------------------- #
-
 def _list_playlists(user_creds=None):
     user_creds = context.active_creds(user_creds)
     try:
@@ -494,6 +472,7 @@ def delete_playlist(playlist_id):
 
 
 def get_playlist_track_ids(playlist_id, user_creds=None):
+    """Library ids of a playlist; entries carrying their real provider are mapped back."""
     user_creds = context.active_creds(user_creds)
     try:
         items = _call(
@@ -511,7 +490,6 @@ def get_playlist_track_ids(playlist_id, user_creds=None):
         if t.get('provider') == LIBRARY:
             ids.append(str(t['item_id']))
             continue
-        # playlist entries usually carry their real provider; map them to the library item
         try:
             lib = _call(
                 'music/get_library_item',
@@ -549,7 +527,10 @@ def _create_playlist_batched(title, item_ids, user_creds=None):
 
 
 def _wait_for_task(task, user_creds=None):
-    """Wait for a Music Assistant background task; False only when it reports a failure.
+    """Wait for a Music Assistant background task; False when it reports a failure.
+
+    ``partial_success`` counts as a failure: Music Assistant could not add some of the
+    tracks, so the playlist is incomplete.
 
     ``tasks/get`` needs the SYSTEM_READ scope. When the token lacks it (or the task is
     already gone) the result cannot be checked and the add is assumed to succeed.
@@ -606,10 +587,6 @@ def create_or_replace_playlist(playlist_name, item_ids, user_creds=None):
         logger.exception(f"Music Assistant create_or_replace_playlist failed for '{playlist_name}'")
         return None
 
-
-# --------------------------------------------------------------------------- #
-# Listening history and lyrics
-# --------------------------------------------------------------------------- #
 
 def get_top_played_songs(limit, user_creds=None):
     user_creds = context.active_creds(user_creds)
