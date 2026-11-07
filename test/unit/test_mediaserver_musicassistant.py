@@ -136,7 +136,6 @@ class FakeMA:
         if command == 'tasks/get':
             return {'id': args['task_id'], 'status': self.task_status}
         if command == 'music/playlists/playlist_tracks':
-            # the builtin provider returns entries with their real provider
             out = []
             for tid in self.playlists[args['item_id']]['tracks']:
                 m = next(t for t in self.tracks if t['item_id'] == tid)['provider_mappings'][0]
