@@ -113,7 +113,7 @@ provider_probe = _LazyProbe()
 # Supported target providers (what the tool knows how to talk to)
 # ---------------------------------------------------------------------------
 
-_SUPPORTED_TARGETS = frozenset({'jellyfin', 'navidrome', 'emby', 'lyrion', 'plex'})
+_SUPPORTED_TARGETS = frozenset({'jellyfin', 'navidrome', 'emby', 'lyrion', 'plex', 'musicassistant'})
 
 # A planner id in session state is a durable reservation, not just a cache of the
 # job's current status. The claim and the queue row are one transaction, so a
@@ -626,6 +626,12 @@ def _current_provider_creds():
         return t, {
             'url': getattr(cfg, 'PLEX_URL', ''),
             'token': getattr(cfg, 'PLEX_TOKEN', ''),
+        }
+    if t == 'musicassistant':
+        return t, {
+            'url': getattr(cfg, 'MUSICASSISTANT_URL', ''),
+            'token': getattr(cfg, 'MUSICASSISTANT_TOKEN', ''),
+            'music_path': getattr(cfg, 'MUSICASSISTANT_MUSIC_PATH', ''),
         }
     return None, {}
 

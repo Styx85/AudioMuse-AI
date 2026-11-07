@@ -122,12 +122,22 @@ LYRION_URL = os.environ.get("LYRION_URL", "")
 PLEX_URL = os.environ.get("PLEX_URL", "") # e.g. http://your-plex-server:32400
 PLEX_TOKEN = os.environ.get("PLEX_TOKEN", "") # X-Plex-Token for the Plex server
 
+# --- Music Assistant Constants ---
+# These are used only if MEDIASERVER_TYPE is "musicassistant".
+MUSICASSISTANT_URL = os.environ.get("MUSICASSISTANT_URL", "") # e.g. http://music-assistant:8095
+MUSICASSISTANT_TOKEN = os.environ.get("MUSICASSISTANT_TOKEN", "") # Music Assistant access token
+# Music folder of Music Assistant's filesystem provider(s) as mounted in the AudioMuse-AI
+# containers (Music Assistant has no download endpoint, audio is read from here). Either
+# one path ("/music") or "provider_instance=/path;other_instance=/path2".
+MUSICASSISTANT_MUSIC_PATH = os.environ.get("MUSICASSISTANT_MUSIC_PATH", "")
+
 MEDIASERVER_FIELDS_BY_TYPE = {
     'jellyfin': ['JELLYFIN_URL', 'JELLYFIN_USER_ID', 'JELLYFIN_TOKEN'],
     'navidrome': ['NAVIDROME_URL', 'NAVIDROME_USER', 'NAVIDROME_PASSWORD', 'NAVIDROME_API_KEY'],
     'lyrion': ['LYRION_URL'],
     'emby': ['EMBY_URL', 'EMBY_USER_ID', 'EMBY_TOKEN'],
     'plex': ['PLEX_URL', 'PLEX_TOKEN'],
+    'musicassistant': ['MUSICASSISTANT_URL', 'MUSICASSISTANT_TOKEN', 'MUSICASSISTANT_MUSIC_PATH'],
 }
 
 MEDIASERVER_OBSOLETE_FIELDS_BY_TYPE = {
@@ -152,6 +162,8 @@ MEDIASERVER_CRED_KEY_BY_FIELD = {
     'NAVIDROME_API_KEY': 'api_key',
     'LYRION_URL': 'url',
     'PLEX_URL': 'url', 'PLEX_TOKEN': 'token',
+    'MUSICASSISTANT_URL': 'url', 'MUSICASSISTANT_TOKEN': 'token',
+    'MUSICASSISTANT_MUSIC_PATH': 'music_path',
 }
 
 # The ONLY persistent home of these settings is the music_servers registry

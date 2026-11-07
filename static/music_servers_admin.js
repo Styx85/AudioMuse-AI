@@ -33,6 +33,11 @@
         plex: [
             { key: 'url', label: 'Server URL', placeholder: 'http://plex:32400' },
             { key: 'token', label: 'Plex Token', secret: true }
+        ],
+        musicassistant: [
+            { key: 'url', label: 'Server URL', placeholder: 'http://music-assistant:8095' },
+            { key: 'token', label: 'Access Token', secret: true },
+            { key: 'music_path', label: 'Music folder in the AudioMuse-AI containers', placeholder: '/music' }
         ]
     };
 

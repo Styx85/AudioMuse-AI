@@ -12,6 +12,7 @@ nav:
   - Multiple Music Servers: MULTI_SERVER.md
   - Deployment: DEPLOYMENT.md
   - Navidrome Setup: NAVIDROME.md
+  - Music Assistant Setup: MUSIC_ASSISTANT.md
   - GPU: GPU.md
   - Parameters: PARAMETERS.md
   - Authentication: AUTH.md

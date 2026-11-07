@@ -21,6 +21,11 @@ var serverFields = {
     plex: [
         {name: 'PLEX_URL', label: 'Plex URL', placeholder: 'http://your-plex-server:32400', tooltip: 'Base URL of your Plex Media Server, including http:// or https:// and the port (default 32400). Must be reachable from the AudioMuse-AI container.'},
         {name: 'PLEX_TOKEN', label: 'Plex API token', placeholder: 'your-plex-token', tooltip: 'Your X-Plex-Token for the server. See https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/ to find it.'}
+    ],
+    musicassistant: [
+        {name: 'MUSICASSISTANT_URL', label: 'Music Assistant URL', placeholder: 'http://your-music-assistant:8095', tooltip: 'Base URL of your Music Assistant server (2.10 or newer), including http:// and the port (default 8095). Must be reachable from the AudioMuse-AI container.'},
+        {name: 'MUSICASSISTANT_TOKEN', label: 'Music Assistant access token', placeholder: 'your-access-token', tooltip: 'A Music Assistant access token. It needs read access to providers and the library and write access to playlists.'},
+        {name: 'MUSICASSISTANT_MUSIC_PATH', label: 'Music folder (in AudioMuse-AI)', placeholder: '/music', tooltip: 'Music Assistant has no download endpoint: mount the same music folder that Music Assistant\'s filesystem provider uses into the AudioMuse-AI flask and worker containers (read-only is enough) and enter its path here. Several filesystem providers: provider_instance=/path;other_instance=/path2.'}
     ]
 };
 
@@ -926,7 +931,7 @@ function loadSetupData() {
 
 function saveCurrentServerValues() {
     var currentServerType = document.getElementById('MEDIASERVER_TYPE').value;
-    var keys = ['JELLYFIN_URL', 'JELLYFIN_USER_ID', 'JELLYFIN_TOKEN', 'NAVIDROME_URL', 'NAVIDROME_USER', 'NAVIDROME_PASSWORD', 'NAVIDROME_API_KEY', 'LYRION_URL', 'EMBY_URL', 'EMBY_USER_ID', 'EMBY_TOKEN', 'PLEX_URL', 'PLEX_TOKEN'];
+    var keys = ['JELLYFIN_URL', 'JELLYFIN_USER_ID', 'JELLYFIN_TOKEN', 'NAVIDROME_URL', 'NAVIDROME_USER', 'NAVIDROME_PASSWORD', 'NAVIDROME_API_KEY', 'LYRION_URL', 'EMBY_URL', 'EMBY_USER_ID', 'EMBY_TOKEN', 'PLEX_URL', 'PLEX_TOKEN', 'MUSICASSISTANT_URL', 'MUSICASSISTANT_TOKEN', 'MUSICASSISTANT_MUSIC_PATH'];
     keys.forEach(function(key) {
         var input = document.getElementById(key);
         if (input) {

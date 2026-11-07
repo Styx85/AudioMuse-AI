@@ -35,7 +35,7 @@ Maintainer of AudioMuse-AI
 
 AudioMuse-AI is an opensource and self-hosted tool that uses sonic analysis to rediscover forgotten songs in your music library and generate groove-aware playlists that also capture the meaning behind each track, without relying on metadata or external APIs.
 
-You can run it locally with Docker Compose or Podman, deploy it at scale in a Kubernetes cluster (**AMD64** and **ARM64** supported), or use native applications available for **macOS, Windows, and Linux**. It integrates with major self-hosted music servers including [Navidrome](https://www.navidrome.org/), [Jellyfin](https://jellyfin.org), [LMS](https://github.com/epoupon/lms/tree/master), [Lyrion](https://lyrion.org/), [Emby](https://emby.media), and [Plex](https://www.plex.tv/), with more integrations planned.
+You can run it locally with Docker Compose or Podman, deploy it at scale in a Kubernetes cluster (**AMD64** and **ARM64** supported), or use native applications available for **macOS, Windows, and Linux**. It integrates with major self-hosted music servers including [Navidrome](https://www.navidrome.org/), [Jellyfin](https://jellyfin.org), [LMS](https://github.com/epoupon/lms/tree/master), [Lyrion](https://lyrion.org/), [Emby](https://emby.media), [Plex](https://www.plex.tv/) and [Music Assistant](https://music-assistant.io), with more integrations planned.
 
 > **Prefer not to self-host?** [Elestio](https://elest.io/open-source/audiomuse-ai) offers AudioMuse-AI as a managed cloud service, and their [YouTube video](https://www.youtube.com/watch?v=Ow89q6gQ1mM) is a good introduction to the project and its features.
 
@@ -61,7 +61,7 @@ AudioMuse-AI lets you explore your music library in innovative ways, just **star
 >
 > </details>
 
-More information can be found in the [docs folder](docs): [ARCHITECTURE](docs/ARCHITECTURE.md), [ALGORITHM DESCRIPTION](docs/ALGORITHM.md), [MULTIPLE MUSIC SERVERS](docs/MULTI_SERVER.md), [DEPLOYMENT STRATEGY](docs/DEPLOYMENT.md), [NAVIDROME SETUP](docs/NAVIDROME.md), [GPU DEPLOYMENT](docs/GPU.md), [CONFIGURATION PARAMETERS](docs/PARAMETERS.md), [AUTHENTICATION](docs/AUTH.md), [PLUGINS](docs/PLUGIN.md), [ERROR CODES](docs/ERROR_CODES.md) and [FAQ](docs/FAQ.md).
+More information can be found in the [docs folder](docs): [ARCHITECTURE](docs/ARCHITECTURE.md), [ALGORITHM DESCRIPTION](docs/ALGORITHM.md), [MULTIPLE MUSIC SERVERS](docs/MULTI_SERVER.md), [DEPLOYMENT STRATEGY](docs/DEPLOYMENT.md), [NAVIDROME SETUP](docs/NAVIDROME.md), [MUSIC ASSISTANT SETUP](docs/MUSIC_ASSISTANT.md), [GPU DEPLOYMENT](docs/GPU.md), [CONFIGURATION PARAMETERS](docs/PARAMETERS.md), [AUTHENTICATION](docs/AUTH.md), [PLUGINS](docs/PLUGIN.md), [ERROR CODES](docs/ERROR_CODES.md) and [FAQ](docs/FAQ.md).
 
 **The full list of AudioMuse-AI related repository are:** 
   > * [AudioMuse-AI](https://github.com/NeptuneHub/AudioMuse-AI): the core application, it run Flask and Worker containers to actually run all the feature;
@@ -99,7 +99,7 @@ From `v1.0.0`, only PostgreSQL and `TZ` are configured via environment variables
 
 **Prerequisites:**
 * Docker and Docker Compose installed
-* A running media server (Navidrome, Jellyfin, Lyrion, Emby, or Plex)
+* A running media server (Navidrome, Jellyfin, Lyrion, Emby, Plex or Music Assistant)
 * See [Hardware Requirements](#hardware-requirements)
 
 **Steps:**
